@@ -1,8 +1,8 @@
-const closeListBtns = document.querySelectorAll('[data-xmark]');
-const addCardFooter = document.querySelectorAll('.list-footer');
-const newCardInput = document.querySelectorAll('new-card-input');
-const addCardBtn = document.querySelectorAll('[data-add-card]');
-const closeAddCardBtn = document.querySelectorAll('[data-close-add-card]');
+//const closeListBtns = document.querySelectorAll('[data-xmark]');
+//const addCardFooter = document.querySelectorAll('.list-footer');
+////const newCardInput = document.querySelectorAll('new-card-input');
+//const addCardBtn = document.querySelectorAll('[data-add-card]');
+//const closeAddCardBtn = document.querySelectorAll('[data-close-add-card]');
 const main = document.querySelector('main');
 
 let currentDeleteListAlert;
@@ -16,7 +16,7 @@ function deleteList(button){
     }
    const deleteListAlert = document.createElement("div");
    const deleteListBtn = document.createElement("button");
-   const parentDiv = button.closest('.list');  ///want to check to see if .parentElement would work
+   const parentDiv = button.parentElement.parentElement;  //closest('.list');  ///want to check to see if .parentElement would work
    deleteListAlert.classList.add("delete-list-alert");
    deleteListAlert.textContent = "Are you sure you want to delete this list?";
    deleteListBtn.classList.add("delete-list-btn");
@@ -36,7 +36,8 @@ function deleteList(button){
 
    document.body.addEventListener('click', clickOutsideHandler);
    deleteListBtn.addEventListener("click", function(){
-       button.parentElement.parentElement.remove();
+       parentDiv.remove();
+    //button.parentElement.parentElement.remove();
        deleteListAlert.remove();
        document.body.removeEventListener('click', clickOutsideHandler);
    });
@@ -68,7 +69,7 @@ function deleteList(button){
 
 
 
-let lists = ["To Do", "Doing", "In Review", "Done" , "Barry Schultz", "Ken Climo"];
+let lists = ["To Do", "Doing", "In Review", "Done"];
 
 const createLists = () => {
     //const main = document.querySelector('main');
@@ -100,29 +101,90 @@ const createLists = () => {
             </div>
         `;
 
+        //delete list button function 
         const closeListBtn = listElement.querySelector('.fa-xmark[data-xmark]');
         closeListBtn.addEventListener("click", (event) => {
             event.stopPropagation(); // Prevent the click event from propagating to the document
             deleteList(closeListBtn);
         });
 
+        //footer and add card close toggle
         const listFooter = listElement.querySelector('.list-footer');
         const newCardInput = listElement.querySelector('.new-card-input');
         const closeAddCardBtn = listElement.querySelector('[data-close-add-card]');
 
         const toggleVisibility = () => {
             listElement.classList.toggle('collapsed');
-
-            // listFooter.classList.toggle('hide');
+            listFooter.classList.toggle('hide');
             newCardInput.classList.toggle('hide');
         };
 
         listFooter.addEventListener("click", toggleVisibility);
         closeAddCardBtn.addEventListener("click", toggleVisibility);
 
+        //form and add card button
+        const listMain = listElement.querySelector('.list-main');
+        const form = listElement.querySelector('form');
+        const textArea = listElement.querySelector('textarea');
+
+        form.addEventListener("submit", (e) => {
+            e.preventDefault();
+            formValidation();
+          });
+        
+        let formValidation = () => {
+            if (textArea.value === "") {
+              toggleVisibility(); 
+            } else {
+              acceptData();
+              textArea.value = '';
+            }
+          };
+        
+        let data = [];
+        
+        let acceptData = () =>{
+          data.push(textArea.value);
+          localStorage.setItem("data", JSON.stringify(data));
+          console.log(data);
+          createCard();
+        };
+
+        let createCard = () =>{
+            listMain.innerHTML = "";
+
+            data.forEach((element, index)=>{
+                const cardElement = document.createElement('div');
+                cardElement.classList.add('card');
+                cardElement.id = index + "C";
+
+                cardElement.innerHTML =`
+                <div id=${cardElement.id} class="bubble" draggable="true">
+                <div class="task-name">${element}</div>
+                <button onClick ="editTask(this)">Edit</button>
+                <button onClick ="deleteTask(this);createCard()">Delete</button>
+                </div>
+                `;
+
+
+                let deleteTask = (e) =>{
+                    e.parentElement.remove();
+                    data.splice(e.parentElement.id, 1);
+                    localStorage.setItem("data", JSON.stringify(data));
+                    console.log(data);
+                  };
+                listMain.appendChild(cardElement);
+            });///end for each card/data
+
+
+            
+        };///end create card
+
+        
+
         main.appendChild(listElement);
-    });
-};
+    });////end for each list loop
+}; ///end create list 
 
 // const createLists = () =>{
 //     main.innerHTML = '';
