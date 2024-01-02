@@ -82,7 +82,7 @@ const createLists = () => {
 
         listElement.innerHTML = `
             <div class="list-header">
-                <span>${element}</span>
+                <span class="list-name">${element}</span>
                 <i class="fa-solid fa-xmark" data-xmark></i>
             </div>
             <div class="list-main"></div>
@@ -100,6 +100,14 @@ const createLists = () => {
                 <div class="add-card">Add a Card</div>
             </div>
         `;
+
+        //make the list name editable on click
+        const listName = listElement.querySelector('.list-name');
+        listName.addEventListener('click',(e)=>{
+            let field = e.target;
+            field.contentEditable = field.contentEditable === true ? false : true;
+        });
+
 
         //delete list button function 
         const closeListBtn = listElement.querySelector('.fa-xmark[data-xmark]');
@@ -126,6 +134,14 @@ const createLists = () => {
         const listMain = listElement.querySelector('.list-main');
         const form = listElement.querySelector('form');
         const textArea = listElement.querySelector('textarea');
+
+
+        form.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+              event.preventDefault();
+              formValidation();
+            }
+          });
 
         form.addEventListener("submit", (e) => {
             e.preventDefault();
@@ -159,9 +175,11 @@ const createLists = () => {
                 cardElement.id = index + "C";
 
                 cardElement.innerHTML =`
-                <span class="task-name">${element}</span>
-                <button type="button">Edit</button>
-                <button type="button" data-delete-card-btn>Delete</button>
+                <div class="card-name">${element}</div>
+                <div class="card-btns">
+                <i class="fa-solid fa-pen"></i>
+                <i class="fa-solid fa-trash" data-delete-card-btn></i>
+                </div>
                 `;
 
                 const deleteCardBtn = cardElement.querySelector('[data-delete-card-btn]');
@@ -175,7 +193,9 @@ const createLists = () => {
 
                  deleteCardBtn.addEventListener('click', deleteCard); 
 
+                let editCard = (e) =>{
 
+                };
 
 
                 listMain.appendChild(cardElement);

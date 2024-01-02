@@ -67,6 +67,12 @@ main{
 .list-header i{
     padding:5px;
 }
+.list-name{
+    width: 100%;
+}
+
+
+
 .new-card-input{
    padding: 10px;
     width: 100%;
@@ -89,6 +95,7 @@ main{
 }
 .new-card-input button:hover{
     filter: brightness(107%);
+    cursor: pointer;
 }
 textarea{
     resize: none;
@@ -119,8 +126,6 @@ textarea::placeholder{
     border-radius: 10px;
     cursor: pointer;
 }
-
-
 .delete-list-alert{
     height:200px;
     width: 200px;
@@ -145,4 +150,35 @@ textarea::placeholder{
 /* .list.collapsed .new-card-input, */
 .list.collapsed .list-footer {
     display: none;
+}
+
+.list-main{
+    padding:10px;
+    display: flex;
+    flex-direction: column;
+}
+
+.card{
+    background-color: rgba(60, 60, 60, 0.5);
+    color: rgba(200, 200, 200);
+    border-radius: 5px;
+    margin-bottom: 10px;
+    padding: 10px;
+    width: 250px;
+    height: auto;
+}
+.card-name{
+    overflow-wrap: break-word;
+}
+
+.card i{
+    margin-left: 20px;
+    cursor: pointer;
+}
+.card i:hover{
+    filter: brightness(110%);
+}
+.card-btns{
+    display: flex;
+    justify-content: flex-end;
 }
