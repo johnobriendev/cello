@@ -159,20 +159,25 @@ const createLists = () => {
                 cardElement.id = index + "C";
 
                 cardElement.innerHTML =`
-                <div id=${cardElement.id} class="bubble" draggable="true">
-                <div class="task-name">${element}</div>
-                <button onClick ="editTask(this)">Edit</button>
-                <button onClick ="deleteTask(this);createCard()">Delete</button>
-                </div>
+                <span class="task-name">${element}</span>
+                <button type="button">Edit</button>
+                <button type="button" data-delete-card-btn>Delete</button>
                 `;
 
+                const deleteCardBtn = cardElement.querySelector('[data-delete-card-btn]');
 
-                let deleteTask = (e) =>{
-                    e.parentElement.remove();
-                    data.splice(e.parentElement.id, 1);
+                let deleteCard = (e) =>{
+                    cardElement.remove();
+                    data.splice(e.id, 1);
                     localStorage.setItem("data", JSON.stringify(data));
                     console.log(data);
                   };
+
+                 deleteCardBtn.addEventListener('click', deleteCard); 
+
+
+
+
                 listMain.appendChild(cardElement);
             });///end for each card/data
 
