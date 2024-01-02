@@ -39,6 +39,7 @@ main{
     width:100%;
     padding: 30px;
     display: flex;
+    align-items: flex-start;
     gap: 30px;
 }
 .list{
@@ -139,4 +140,9 @@ textarea::placeholder{
     width:100px;
     height: 50px;
     border-radius: 10px;
+}
+
+/* .list.collapsed .new-card-input, */
+.list.collapsed .list-footer {
+    display: none;
 }
