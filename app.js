@@ -1,7 +1,15 @@
-const closeListBtns = document.querySelectorAll(".fa-xmark");
-
+const closeListBtns = document.querySelectorAll('[data-xmark');
+const addCardFooter = document.querySelectorAll('.list-footer');
+const newCardInput = document.querySelectorAll('new-card-input');
+const addCardBtn = document.querySelectorAll('[data-add-card]');
+const closeAddCardBtn = document.querySelectorAll('[data-close-add-card]');
+const main = document.querySelector('main');
 
 let currentDeleteListAlert;
+
+
+
+
 
 function deleteList(button){
     
@@ -44,6 +52,10 @@ function deleteList(button){
     currentDeleteListAlert = deleteListAlert;
 }
 
+function showAddCardBtn(){
+
+}
+
 closeListBtns.forEach((button) =>
     button.addEventListener("click", (event) => {
         event.stopPropagation(); // Prevent the click event from propagating to the document
@@ -51,8 +63,8 @@ closeListBtns.forEach((button) =>
     })
 );
 
-// closeListBtns.forEach((button)=> 
-//     button.addEventListener("click", () => deleteList(button))
-// );
+addCardFooter.forEach((footer)=>
+    footer.addEventListener("click", showAddCardBtn)
+)
 
 

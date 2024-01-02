@@ -4,6 +4,9 @@
     box-sizing: border-box;
     font-family: 'Montserrat', sans-serif;
 }
+.hide{
+    display:none;
+}
 body{
     height:100vh;
     width: 100%;
@@ -44,6 +47,7 @@ main{
     display: flex;
     flex-direction: column;
     justify-content: space-around;
+    align-items: center;
     gap:10px;
     border-radius: 10px;
     width:300px;
@@ -58,21 +62,63 @@ main{
     align-items: center;
     padding:10px;
 }
+.flexbox i,
 .list-header i{
     padding:5px;
 }
+.new-card-input{
+   padding: 10px;
+    width: 100%;
+}
+.flex-box{
+    width:100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding:10px;
+
+}
+.new-card-input button{
+    height: 40px;
+    width:120px;
+    margin-right: 10px;
+    background-color: lightskyblue;
+    color: rgb(50, 50, 50);
+    border-radius: 5px;
+}
+.new-card-input button:hover{
+    filter: brightness(107%);
+}
+textarea{
+    resize: none;
+    background-color: rgba(60, 60, 60, 0.5);
+    color: rgba(200, 200, 200);
+    border-radius: 5px;
+    margin-bottom: 10px;
+    padding: 10px;
+    width:100%;
+}
+textarea::placeholder{
+    color: rgba(200, 200, 200);
+}
 .list-footer{
     width: 100%;
-    display: inline-block;
+    background-color: transparent;
+    display: flex;
     transition: .3s ease;
     padding: 10px;
 }
+.list-footer i{
+    margin-right: 10px;
+}
+.flexbox i:hover,
 .list-footer:hover,
 .list-header i:hover{
-    background-color: rgba(100, 100, 100, 0.8);
+    background-color: rgba(150, 150, 150, 0.8);
     border-radius: 10px;
     cursor: pointer;
 }
+
 
 .delete-list-alert{
     height:200px;
@@ -93,5 +139,4 @@ main{
     width:100px;
     height: 50px;
     border-radius: 10px;
-
 }
