@@ -1,8 +1,3 @@
-//const closeListBtns = document.querySelectorAll('[data-xmark]');
-//const addCardFooter = document.querySelectorAll('.list-footer');
-////const newCardInput = document.querySelectorAll('new-card-input');
-//const addCardBtn = document.querySelectorAll('[data-add-card]');
-//const closeAddCardBtn = document.querySelectorAll('[data-close-add-card]');
 const main = document.querySelector('main');
 
 let currentDeleteListAlert;
@@ -44,26 +39,6 @@ function deleteList(button){
    currentDeleteListAlert = deleteListAlert;
 }
 
-///////working delete button but weird//////////
-
-// main.addEventListener("click", (event) => {
-//     const target = event.target;
-
-//     if (target.matches('.fa-xmark[data-xmark]')) {
-//         event.stopPropagation(); // Prevent the click event from propagating to the document
-//         deleteList(target);
-//     }
-// });
-
-/////////not currently working
-// closeListBtns.forEach((button) =>
-//    button.addEventListener("click", (event) => {
-//        event.stopPropagation(); // Prevent the click event from propagating to the document
-//        deleteList(button);
-//    })
-// );
-
-
 
 
 
@@ -102,11 +77,44 @@ const createLists = () => {
         `;
 
         //make the list name editable on click
+        let area = null;
         const listName = listElement.querySelector('.list-name');
-        listName.addEventListener('click',(e)=>{
-            let field = e.target;
-            field.contentEditable = field.contentEditable === true ? false : true;
-        });
+        
+        listName.onclick = () =>{
+            editStart();
+        };
+
+        const editStart = () => {
+            area = document.createElement('textarea');
+            area.className = 'edit';
+            area.value = listName.innerHTML;
+        
+            area.onkeydown = (event) => {
+                if (event.key == 'Enter') {
+                    area.blur();
+                }
+            };
+        
+            area.onblur = () => {
+                editEnd();
+            };
+        
+            listName.replaceWith(area);
+            area.focus();
+        };
+
+        function editEnd() {
+            listName.innerHTML = area.value;
+            area.replaceWith(listName);
+          };
+        
+        
+        
+        
+        // listName.addEventListener('click',(e)=>{
+        //     let field = e.target;
+        //     field.contentEditable = field.contentEditable === true ? false : true;
+        // });
 
 
         //delete list button function 
@@ -197,6 +205,12 @@ const createLists = () => {
 
                 };
 
+                const cardName = cardElement.querySelector('.card-name');
+                cardName.addEventListener('click',(e)=>{
+                    let field = e.target;
+                    field.contentEditable = field.contentEditable === true ? false : true;
+                });
+
 
                 listMain.appendChild(cardElement);
             });///end for each card/data
@@ -210,38 +224,6 @@ const createLists = () => {
         main.appendChild(listElement);
     });////end for each list loop
 }; ///end create list 
-
-// const createLists = () =>{
-//     main.innerHTML = '';
-//     lists.map((element,index)=>{
-//         return(main.innerHTML +=`
-//             <div class="list" id ="${index}">
-//                 <div class="list-header">
-//                     <span>${element}</span>
-//                     <i class="fa-solid fa-xmark" data-xmark></i>
-//                 </div>
-//                 <div class="list-main"></div>
-//                 <div class="new-card-input hide">
-//                 <form>
-//                     <textarea name="" id="" rows="5" placeholder="Enter a title for this card..."></textarea>
-//                     <div class="flexbox">
-//                         <button type="submit" data-add-card>Add a Card</button> 
-//                         <i class="fa-solid fa-xmark"></i>
-//                     </div>
-//                 </form>
-//                 </div>
-//                 <div class="list-footer">
-//                     <i class="fa-solid fa-plus" data-close-add-card></i>
-//                     <div class="add-card">Add a Card</div>
-//                 </div>
-//             </div>
-//         `
-//         );
-//     });///end of map function
-// };
-
-
-
 
 
 createLists();
