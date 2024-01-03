@@ -11,7 +11,8 @@ function deleteList(button){
     }
    const deleteListAlert = document.createElement("div");
    const deleteListBtn = document.createElement("button");
-   const parentDiv = button.parentElement.parentElement;  //closest('.list');  ///want to check to see if .parentElement would work
+   const parentDiv = button.parentElement.parentElement;  
+
    deleteListAlert.classList.add("delete-list-alert");
    deleteListAlert.textContent = "Are you sure you want to delete this list?";
    deleteListBtn.classList.add("delete-list-btn");
@@ -32,9 +33,12 @@ function deleteList(button){
    document.body.addEventListener('click', clickOutsideHandler);
    deleteListBtn.addEventListener("click", function(){
        parentDiv.remove();
-    //button.parentElement.parentElement.remove();
        deleteListAlert.remove();
        document.body.removeEventListener('click', clickOutsideHandler);
+       lists.splice(parentDiv.id, 1,);
+       console.log(lists);
+       localStorage.setItem("lists", JSON.stringify(lists));
+
    });
    currentDeleteListAlert = deleteListAlert;
 }
@@ -45,6 +49,8 @@ function deleteList(button){
 
 
 let lists = ["To Do", "Doing", "In Review", "Done"];
+
+//localStorage.setItem("lists", JSON.stringify(lists));
 
 const createLists = () => {
     //const main = document.querySelector('main');
@@ -108,14 +114,6 @@ const createLists = () => {
             area.replaceWith(listName);
           };
         
-        
-        
-        
-        // listName.addEventListener('click',(e)=>{
-        //     let field = e.target;
-        //     field.contentEditable = field.contentEditable === true ? false : true;
-        // });
-
 
         //delete list button function 
         const closeListBtn = listElement.querySelector('.fa-xmark[data-xmark]');
@@ -185,7 +183,6 @@ const createLists = () => {
                 cardElement.innerHTML =`
                 <div class="card-name">${element}</div>
                 <div class="card-btns">
-                <i class="fa-solid fa-pen"></i>
                 <i class="fa-solid fa-trash" data-delete-card-btn></i>
                 </div>
                 `;
@@ -201,9 +198,7 @@ const createLists = () => {
 
                  deleteCardBtn.addEventListener('click', deleteCard); 
 
-                let editCard = (e) =>{
-
-                };
+                
 
                 const cardName = cardElement.querySelector('.card-name');
                 cardName.addEventListener('click',(e)=>{
@@ -213,6 +208,7 @@ const createLists = () => {
 
 
                 listMain.appendChild(cardElement);
+                
             });///end for each card/data
 
 
@@ -220,10 +216,22 @@ const createLists = () => {
         };///end create card
 
         
-
+        localStorage.setItem("lists", JSON.stringify(lists));
         main.appendChild(listElement);
+       
     });////end for each list loop
 }; ///end create list 
 
+//createLists();
+console.log(lists);
+//createLists();
+//localStorage.setItem("lists", JSON.stringify(lists));
 
-createLists();
+(() => {
+    lists = JSON.parse(localStorage.getItem("lists")) || []
+    console.log(lists);
+    createLists();
+  })();
+
+
+
