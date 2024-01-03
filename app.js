@@ -50,7 +50,7 @@ function deleteList(button){
 
 let lists = ["To Do", "Doing", "In Review", "Done"];
 
-//localStorage.setItem("lists", JSON.stringify(lists));
+
 
 const createLists = () => {
     //const main = document.querySelector('main');
@@ -94,9 +94,7 @@ const createLists = () => {
             area = document.createElement('textarea');
             area.className = 'edit';
             area.value = listName.innerHTML;
-          
-            
-
+    
             area.onkeydown = (event) => {
                 if (event.key == 'Enter') {
                     area.blur();
@@ -217,8 +215,6 @@ const createLists = () => {
                 
             });///end for each card/data
 
-
-            
         };///end create card
 
         
@@ -230,9 +226,22 @@ const createLists = () => {
 
 //createLists();
 console.log(lists);
-//createLists();
-//localStorage.setItem("lists", JSON.stringify(lists));
+//ths function checks if there is local storage, if there isn't it adds 4 defaults to the lists array
+function initializeLocalStorage() {
+    if (!localStorage.getItem('lists')) {
+        const defaultLists = ["To Do", "Doing", "In Review", "Done"];
+        localStorage.setItem('lists', JSON.stringify(defaultLists));
+    }
+}
 
+// Call the function to initialize local storage if needed
+initializeLocalStorage();
+
+// (() => {
+//     data = JSON.parse(localStorage.getItem("data")) || []
+//     console.log(data);
+//     createCard();
+//   })();
 (() => {
     lists = JSON.parse(localStorage.getItem("lists")) || []
     console.log(lists);
