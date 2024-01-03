@@ -94,7 +94,9 @@ const createLists = () => {
             area = document.createElement('textarea');
             area.className = 'edit';
             area.value = listName.innerHTML;
-        
+          
+            
+
             area.onkeydown = (event) => {
                 if (event.key == 'Enter') {
                     area.blur();
@@ -112,6 +114,10 @@ const createLists = () => {
         function editEnd() {
             listName.innerHTML = area.value;
             area.replaceWith(listName);
+            //adds list item to lists array and then stores in in local storage
+            lists.splice( index,1,listName.textContent);
+            localStorage.setItem("lists", JSON.stringify(lists));
+
           };
         
 
