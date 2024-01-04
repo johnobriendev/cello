@@ -48,9 +48,9 @@ function deleteList(button){
 
 
 
-let lists = ["To Do", "Doing", "In Review", "Done"];
+//let lists = ["To Do", "Doing", "In Review", "Done"];
 
-
+let lists =[{name: 'To Do', data:[]}, {name: 'Doing', data:[]}, {name: 'In Review', data:[]}, {name: 'Done', data:[]}];
 
 const createLists = () => {
     //const main = document.querySelector('main');
@@ -60,10 +60,11 @@ const createLists = () => {
         const listElement = document.createElement('div');
         listElement.classList.add('list');
         listElement.id = index;
+        const newEl = element;
 
         listElement.innerHTML = `
             <div class="list-header">
-                <span class="list-name">${element}</span>
+                <span class="list-name">${newEl.name}</span>
                 <i class="fa-solid fa-xmark" data-xmark></i>
             </div>
             <div class="list-main"></div>
@@ -112,8 +113,9 @@ const createLists = () => {
         function editEnd() {
             listName.innerHTML = area.value;
             area.replaceWith(listName);
+            newListObject = {name: listName.textContent, data: []};
             //adds list item to lists array and then stores in in local storage
-            lists.splice( index,1,listName.textContent);
+            lists.splice( index,1,newListObject);
             localStorage.setItem("lists", JSON.stringify(lists));
 
           };
@@ -229,24 +231,24 @@ const createLists = () => {
 
 
 
-//createLists();
+// createLists();
 console.log(lists);
 //ths function checks if there is local storage, if there isn't it adds 4 defaults to the lists array
-function initializeLocalStorage() {
-    if (!localStorage.getItem('lists')) {
-        const defaultLists = ["To Do", "Doing", "In Review", "Done"];
-        localStorage.setItem('lists', JSON.stringify(defaultLists));
-    }
-}
+// function initializeLocalStorage() {
+//     if (!localStorage.getItem('lists')) {
+//         const defaultLists = ["To Do", "Doing", "In Review", "Done"];
+//         localStorage.setItem('lists', JSON.stringify(defaultLists));
+//     }
+// }
 
-// Call the function to initialize local storage if needed
-initializeLocalStorage();
+// // Call the function to initialize local storage if needed
+// initializeLocalStorage();
 
-(() => {
-    data = JSON.parse(localStorage.getItem("data")) || []
-    console.log(data);
-    // createCard();
-  })();
+// (() => {
+//     data = JSON.parse(localStorage.getItem("data")) || []
+//     console.log(data);
+//     // createCard();
+//   })();
   
 (() => {
     lists = JSON.parse(localStorage.getItem("lists")) || []
