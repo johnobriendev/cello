@@ -11,7 +11,7 @@ function deleteList(button){
     }
    const deleteListAlert = document.createElement("div");
    const deleteListBtn = document.createElement("button");
-   const parentDiv = button.parentElement.parentElement;  
+   const parentDiv = button.parentElement.parentElement;  //this should be the same as listElement?
 
    deleteListAlert.classList.add("delete-list-alert");
    deleteListAlert.textContent = "Are you sure you want to delete this list?";
@@ -32,10 +32,11 @@ function deleteList(button){
 
    document.body.addEventListener('click', clickOutsideHandler);
    deleteListBtn.addEventListener("click", function(){
+       lists.splice(parentDiv.id, 1);
+
        parentDiv.remove();
        deleteListAlert.remove();
        document.body.removeEventListener('click', clickOutsideHandler);
-       lists.splice(parentDiv.id, 1,);
        console.log(lists);
        localStorage.setItem("lists", JSON.stringify(lists));
 
@@ -101,11 +102,9 @@ const createLists = () => {
                     area.blur();
                 }
             };
-        
             area.onblur = () => {
                 editEnd();
             };
-        
             listName.replaceWith(area);
             area.focus();
         };
@@ -113,7 +112,7 @@ const createLists = () => {
         function editEnd() {
             listName.innerHTML = area.value;
             area.replaceWith(listName);
-            newListObject = {name: listName.textContent, data: []};
+            newListObject = {name: listName.textContent, data: []}; ///////////need to fix this line/////////////
             //adds list item to lists array and then stores in in local storage
             lists.splice( index,1,newListObject);
             localStorage.setItem("lists", JSON.stringify(lists));
@@ -122,10 +121,10 @@ const createLists = () => {
         
 
         //delete list button function 
-        const closeListBtn = listElement.querySelector('.fa-xmark[data-xmark]');
-        closeListBtn.addEventListener("click", (event) => {
+        const deleteListBtn = listElement.querySelector('.fa-xmark[data-xmark]');
+        deleteListBtn.addEventListener("click", (event) => {
             event.stopPropagation(); // Prevent the click event from propagating to the document
-            deleteList(closeListBtn);
+            deleteList(deleteListBtn);
         });
 
         //footer and add card close toggle
@@ -169,22 +168,22 @@ const createLists = () => {
             }
           };
         
-        let data = [];
-        
+        //let data = newEl.data;
+       
         let acceptData = () =>{
-          data.push(textArea.value);
-          localStorage.setItem("data", JSON.stringify(data));
-          console.log(data);
+          //data.push(textArea.value);
+          newEl.data.push(textArea.value);
+          localStorage.setItem("lists", JSON.stringify(lists));
           createCard();
         };
 
         let createCard = () =>{
             listMain.innerHTML = "";
 
-            data.forEach((element, index)=>{
+            newEl.data.forEach((element, index)=>{
                 const cardElement = document.createElement('div');
                 cardElement.classList.add('card');
-                //cardElement.id = index + "C";
+                cardElement.id = index + "C";
 
                 cardElement.innerHTML =`
                 <div class="card-name">${element}</div>
@@ -196,58 +195,75 @@ const createLists = () => {
                 const deleteCardBtn = cardElement.querySelector('[data-delete-card-btn]');
 
                 let deleteCard = (e) =>{
+                    const cardIndex = newEl.data.indexOf(element);
+                    newEl.data.splice(cardIndex, 1); ///need a variable that gives me the index of the element
                     cardElement.remove();
-                    data.splice(data.indexOf.cardElement, 1);
-                    localStorage.setItem("data", JSON.stringify(data));
-                    console.log(data);
+                    localStorage.setItem("lists", JSON.stringify(lists));
+                    console.log(newEl.data);
                   };
 
                  deleteCardBtn.addEventListener('click', deleteCard); 
 
                 
-
-                const cardName = cardElement.querySelector('.card-name');
-                cardName.addEventListener('click',(e)=>{
-                    let field = e.target;
-                    field.contentEditable = field.contentEditable === true ? false : true;
-                });
-
-
                 listMain.appendChild(cardElement);
                 
             });///end for each card/data
 
         };///end create card
 
-        
+        createCard();
         localStorage.setItem("lists", JSON.stringify(lists));
         main.appendChild(listElement);
-       
     });////end for each list loop
 }; ///end create list 
 
 
-
-
-
-
-// createLists();
-console.log(lists);
-//ths function checks if there is local storage, if there isn't it adds 4 defaults to the lists array
 // function initializeLocalStorage() {
-//     if (!localStorage.getItem('lists')) {
-//         const defaultLists = ["To Do", "Doing", "In Review", "Done"];
-//         localStorage.setItem('lists', JSON.stringify(defaultLists));
+//     const listsKey = 'lists';
+
+//     // Check if 'lists' key is present in local storage
+//     if (!localStorage.getItem(listsKey)) {
+//         const defaultLists = [{name: 'To Do', data:[]}, {name: 'Doing', data:[]}, {name: 'In Review', data:[]}, {name: 'Done', data:[]}];
+//         localStorage.setItem(listsKey, JSON.stringify(defaultLists));
+//     } else {
+//         // If 'lists' key exists but is empty, initialize with default values
+//         const existingLists = JSON.parse(localStorage.getItem(listsKey));
+//         if (!existingLists.length) {
+//             const defaultLists = [{name: 'To Do', data:[]}, {name: 'Doing', data:[]}, {name: 'In Review', data:[]}, {name: 'Done', data:[]}];
+//             localStorage.setItem(listsKey, JSON.stringify(defaultLists));
+//         }
 //     }
 // }
 
 // // Call the function to initialize local storage if needed
 // initializeLocalStorage();
 
+
+
+
+ //screateLists();
+//ths function checks if there is local storage, if there isn't it adds 4 defaults to the lists array
+// function initializeLocalStorage() {
+//     if (!localStorage.getItem('lists')) {
+//         const defaultLists = [{name: 'To Do', data:[]}, {name: 'Doing', data:[]}, {name: 'In Review', data:[]}, {name: 'Done', data:[]}];
+//         localStorage.setItem('lists', JSON.stringify(defaultLists));
+//     }else {
+//         // If 'lists' key exists but is empty, initialize with default values
+//         const existingLists = JSON.parse(localStorage.getItem('lists'));
+//         if (!existingLists.length) {
+//             const defaultLists = [{name: 'To Do', data:[]}, {name: 'Doing', data:[]}, {name: 'In Review', data:[]}, {name: 'Done', data:[]}];
+//             localStorage.setItem('lists', JSON.stringify(defaultLists));
+//         }
+//     }   
+// }
+
+// // // Call the function to initialize local storage if needed
+// initializeLocalStorage();
+
 // (() => {
 //     data = JSON.parse(localStorage.getItem("data")) || []
 //     console.log(data);
-//     // createCard();
+//     //createCard();
 //   })();
   
 (() => {
