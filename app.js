@@ -112,11 +112,18 @@ const createLists = () => {
         function editEnd() {
             listName.innerHTML = area.value;
             area.replaceWith(listName);
-            newListObject = {name: listName.textContent, data: []}; ///////////need to fix this line/////////////
-            //adds list item to lists array and then stores in in local storage
-            lists.splice( index,1,newListObject);
-            localStorage.setItem("lists", JSON.stringify(lists));
 
+
+            // Find the index of the list in the lists array
+            const listIndex = lists.findIndex(item => item === newEl);
+
+            // Update the name property of the corresponding list object
+            if (listIndex !== -1) {
+                lists[listIndex].name = listName.textContent;
+                lists[listIndex].data = [...newEl.data]; // Update data with the latest information
+                localStorage.setItem("lists", JSON.stringify(lists));
+            }
+          
           };
         
 
