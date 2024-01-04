@@ -199,11 +199,44 @@ const createLists = () => {
                 </div>
                 `;
 
+                const cardName = cardElement.querySelector('.card-name');
+
+                let editCard = () => {
+                    const cardArea = document.createElement('textarea');
+                    cardArea.className = 'edit';
+                    cardArea.value = cardName.innerHTML;
+        
+                    cardArea.onkeydown = (event) => {
+                        if (event.key === 'Enter') {
+                            cardArea.blur();
+                        }
+                    };
+        
+                    cardArea.onblur = () => {
+                        editEnd();
+                    };
+        
+                    cardName.replaceWith(cardArea);
+                    cardArea.focus();
+        
+                    function editEnd() {
+                        cardName.innerHTML = cardArea.value;
+                        cardArea.replaceWith(cardName);
+        
+                        // Update the card name in your data array
+                        newEl.data[index] = cardName.innerHTML;
+                        localStorage.setItem("lists", JSON.stringify(lists));
+                    }
+                };
+
+                cardName.addEventListener('click', editCard);
+
+
                 const deleteCardBtn = cardElement.querySelector('[data-delete-card-btn]');
 
                 let deleteCard = (e) =>{
                     const cardIndex = newEl.data.indexOf(element);
-                    newEl.data.splice(cardIndex, 1); ///need a variable that gives me the index of the element
+                    newEl.data.splice(cardIndex, 1);
                     cardElement.remove();
                     localStorage.setItem("lists", JSON.stringify(lists));
                     console.log(newEl.data);
