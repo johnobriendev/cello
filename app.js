@@ -242,11 +242,12 @@ function initializeLocalStorage() {
 // Call the function to initialize local storage if needed
 initializeLocalStorage();
 
-// (() => {
-//     data = JSON.parse(localStorage.getItem("data")) || []
-//     console.log(data);
-//     createCard();
-//   })();
+(() => {
+    data = JSON.parse(localStorage.getItem("data")) || []
+    console.log(data);
+    // createCard();
+  })();
+  
 (() => {
     lists = JSON.parse(localStorage.getItem("lists")) || []
     console.log(lists);
