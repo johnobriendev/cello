@@ -258,53 +258,27 @@ const createLists = () => {
 }; ///end create list 
 
 
-// function initializeLocalStorage() {
-//     const listsKey = 'lists';
-
-//     // Check if 'lists' key is present in local storage
-//     if (!localStorage.getItem(listsKey)) {
-//         const defaultLists = [{name: 'To Do', data:[]}, {name: 'Doing', data:[]}, {name: 'In Review', data:[]}, {name: 'Done', data:[]}];
-//         localStorage.setItem(listsKey, JSON.stringify(defaultLists));
-//     } else {
-//         // If 'lists' key exists but is empty, initialize with default values
-//         const existingLists = JSON.parse(localStorage.getItem(listsKey));
-//         if (!existingLists.length) {
-//             const defaultLists = [{name: 'To Do', data:[]}, {name: 'Doing', data:[]}, {name: 'In Review', data:[]}, {name: 'Done', data:[]}];
-//             localStorage.setItem(listsKey, JSON.stringify(defaultLists));
-//         }
-//     }
-// }
-
-// // Call the function to initialize local storage if needed
-// initializeLocalStorage();
 
 
-
-
- //screateLists();
+ //createLists();
 //ths function checks if there is local storage, if there isn't it adds 4 defaults to the lists array
-// function initializeLocalStorage() {
-//     if (!localStorage.getItem('lists')) {
-//         const defaultLists = [{name: 'To Do', data:[]}, {name: 'Doing', data:[]}, {name: 'In Review', data:[]}, {name: 'Done', data:[]}];
-//         localStorage.setItem('lists', JSON.stringify(defaultLists));
-//     }else {
-//         // If 'lists' key exists but is empty, initialize with default values
-//         const existingLists = JSON.parse(localStorage.getItem('lists'));
-//         if (!existingLists.length) {
-//             const defaultLists = [{name: 'To Do', data:[]}, {name: 'Doing', data:[]}, {name: 'In Review', data:[]}, {name: 'Done', data:[]}];
-//             localStorage.setItem('lists', JSON.stringify(defaultLists));
-//         }
-//     }   
-// }
+function initializeLocalStorage() {
+    if (!localStorage.getItem('lists')) {
+        const defaultLists = [{name: 'To Do', data:[]}, {name: 'Doing', data:[]}, {name: 'In Review', data:[]}, {name: 'Done', data:[]}];
+        localStorage.setItem('lists', JSON.stringify(defaultLists));
+    }else {
+        // If 'lists' key exists but is empty, initialize with default values
+        const existingLists = JSON.parse(localStorage.getItem('lists'));
+        if (!existingLists.length) {
+            const defaultLists = [{name: 'To Do', data:[]}, {name: 'Doing', data:[]}, {name: 'In Review', data:[]}, {name: 'Done', data:[]}];
+            localStorage.setItem('lists', JSON.stringify(defaultLists));
+        }
+    }   
+}
 
-// // // Call the function to initialize local storage if needed
-// initializeLocalStorage();
+//Call the function to initialize local storage if needed
+ initializeLocalStorage();
 
-// (() => {
-//     data = JSON.parse(localStorage.getItem("data")) || []
-//     console.log(data);
-//     //createCard();
-//   })();
   
 (() => {
     lists = JSON.parse(localStorage.getItem("lists")) || []
