@@ -182,7 +182,7 @@ const createLists = () => {
             data.forEach((element, index)=>{
                 const cardElement = document.createElement('div');
                 cardElement.classList.add('card');
-                cardElement.id = index + "C";
+                //cardElement.id = index + "C";
 
                 cardElement.innerHTML =`
                 <div class="card-name">${element}</div>
@@ -195,7 +195,7 @@ const createLists = () => {
 
                 let deleteCard = (e) =>{
                     cardElement.remove();
-                    data.splice(e.id, 1);
+                    data.splice(data.indexOf.cardElement, 1);
                     localStorage.setItem("data", JSON.stringify(data));
                     console.log(data);
                   };
@@ -223,6 +223,11 @@ const createLists = () => {
        
     });////end for each list loop
 }; ///end create list 
+
+
+
+
+
 
 //createLists();
 console.log(lists);
