@@ -4,9 +4,7 @@
     box-sizing: border-box;
     font-family: 'Montserrat', sans-serif;
 }
-.hide{
-    display:none;
-}
+
 body{
     height:100vh;
     width: 100%;
@@ -181,4 +179,79 @@ textarea::placeholder{
 .card-btns{
     display: flex;
     justify-content: flex-end;
+}
+
+.add-new-list-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 10px;
+    width:300px;
+    background-color: rgba(50,50,50,.7);
+    color: rgba(200, 200, 200);
+}
+.add-new-list{
+    display: flex;
+    align-items: center;
+    border-radius: 10px;
+    padding:20px;
+    width:100%;
+}
+.add-new-list i{
+    margin-right: 10px;
+    margin-left: 10px;
+}
+.add-new-list:hover{
+    background-color: rgba(150, 150, 150, 0.8);
+    cursor: pointer;
+}
+.add-list-box{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap:10px;
+    align-items: center;
+    border-radius: 10px;
+    padding:20px;
+}
+.add-list-box input{
+    width: 200px;
+    background-color: rgba(60, 60, 60, 0.5);
+    color: rgba(200, 200, 200);
+    border-radius: 5px;
+    margin-bottom: 10px;
+    font-size: 16px;
+    padding:5px;
+}
+.add-list-box input::placeholder{
+    color: rgba(200, 200, 200);
+}
+.add-list-btns{
+    display: flex;
+    align-items: center;
+}
+.add-list-btns i{
+    padding:5px;
+}
+.add-list-btns i:hover{
+    background-color: rgba(150, 150, 150, 0.8);
+    border-radius: 10px;
+    cursor: pointer;
+}
+.add-list-box button{
+    margin-right: 10px;
+    height: 40px;
+    width:120px;
+    margin-right: 20px;
+    background-color: lightskyblue;
+    color: rgb(50, 50, 50);
+    border-radius: 5px;
+}
+.add-list-box button:hover{
+    filter: brightness(107%);
+    cursor: pointer;
+}
+
+.hide{
+    display:none;
 }

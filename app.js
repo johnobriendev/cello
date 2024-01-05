@@ -1,7 +1,6 @@
 const main = document.querySelector('main');
 
 
-//let lists = ["To Do", "Doing", "In Review", "Done"];
 
 let lists =[{name: 'To Do', data:[]}, {name: 'Doing', data:[]}, {name: 'In Review', data:[]}, {name: 'Done', data:[]}];
 
@@ -83,15 +82,14 @@ const createLists = () => {
         const deleteListBtn = listElement.querySelector('.fa-xmark[data-xmark]');
 
         let deleteList = (e) =>{
-            //const listIndex = index;
-
+            
             if (currentDeleteListAlert) {
                 currentDeleteListAlert.remove();
                 document.removeEventListener('click', clickOutsideHandler);
             }
            const deleteListAlert = document.createElement("div");
            const deleteListBtn = document.createElement("button");
-           //const parentDiv = button.parentElement.parentElement;  //this should be the same as listElement?
+           
         
            deleteListAlert.classList.add("delete-list-alert");
            deleteListAlert.textContent = "Are you sure you want to delete this list?";
@@ -132,15 +130,10 @@ const createLists = () => {
         let currentDeleteListAlert;
 
 
-
-
         deleteListBtn.addEventListener("click", (event) => {
             event.stopPropagation(); // Prevent the click event from propagating to the document
             deleteList();
         });
-
-
-
 
 
         //footer and add card close toggle
@@ -184,7 +177,7 @@ const createLists = () => {
             }
           };
         
-        //let data = newEl.data;
+    
        
         let acceptData = () =>{
           //data.push(textArea.value);
@@ -297,11 +290,92 @@ function initializeLocalStorage() {
  initializeLocalStorage();
 
   
-// (() => {
-//     lists = JSON.parse(localStorage.getItem("lists")) || []
-//     console.log(lists);
-//     createLists();
-//   })();
+(() => {
+    lists = JSON.parse(localStorage.getItem("lists")) || []
+    console.log(lists);
+    createLists();
+  })();
+
+
+//////////CREATE A NEW LIST FORM/////////////////
+
+const addNewListContainer = document.createElement('div');
+addNewListContainer.classList.add('add-new-list-container');
+
+addNewListContainer.innerHTML = `
+<div class="add-new-list">
+    <i class="fa-solid fa-plus"></i>
+    <div>
+    Add another list
+    </div>
+</div>
+<div class="add-list-box hide" data-show-add-list>
+  <form data-add-list-form>
+    <input type="text" placeholder="Enter list title..." data-list-input>
+    <div class="add-list-btns">
+        <button type="submit" data-add-card>Add a List</button> 
+        <i class="fa-solid fa-xmark" data-close-add-list></i>
+    </div> 
+  </form>
+</div>
+`;
+
+
+const showAddListForm = () =>{
+    addNewList.classList.toggle('hide');
+    newListFormContainer.classList.toggle('hide');
+};
+const closeAddList = () =>{
+    addNewList.classList.toggle('hide');
+    newListFormContainer.classList.toggle('hide');
+};
+
+//whole container
+const newListFormContainer = addNewListContainer.querySelector('[data-show-add-list]');
+
+///top half////this event shows the form/////
+const addNewList = addNewListContainer.querySelector('.add-new-list');
+addNewList.addEventListener('click',showAddListForm);
+
+
+////this is for the x buttons next to add new list button
+const closeAddListForm = addNewListContainer.querySelector('[data-close-add-list]');
+
+closeAddListForm.addEventListener('click',closeAddList);
+
+///////form stuff//////
+
+addListForm = addNewListContainer.querySelector('[data-add-list-form]');
+listInput = addNewListContainer.querySelector('[data-list-input]');
+
+addListForm.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      listValidation();
+    }
+  });
+
+addListForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    listValidation();
+  });
+
+let listValidation = () => {
+    if (listInput.value === "") {
+      closeAddList(); 
+    } else {
+      acceptList();
+      listInput.value = '';
+    }
+  };
 
 
 
+let acceptList = () =>{
+  newListValue = { name: listInput.value, data: [] };
+  lists.push(newListValue);
+  localStorage.setItem("lists", JSON.stringify(lists));
+  createLists();
+};
+
+main.appendChild(addNewListContainer);
