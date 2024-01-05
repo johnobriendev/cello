@@ -299,83 +299,88 @@ function initializeLocalStorage() {
 
 //////////CREATE A NEW LIST FORM/////////////////
 
-const addNewListContainer = document.createElement('div');
-addNewListContainer.classList.add('add-new-list-container');
+const makeCreateList = () =>{
+    const addNewListContainer = document.createElement('div');
+    addNewListContainer.classList.add('add-new-list-container');
 
-addNewListContainer.innerHTML = `
-<div class="add-new-list">
-    <i class="fa-solid fa-plus"></i>
-    <div>
-    Add another list
+    addNewListContainer.innerHTML = `
+    <div class="add-new-list">
+        <i class="fa-solid fa-plus"></i>
+        <div>
+        Add another list
+        </div>
     </div>
-</div>
-<div class="add-list-box hide" data-show-add-list>
-  <form data-add-list-form>
-    <input type="text" placeholder="Enter list title..." data-list-input>
-    <div class="add-list-btns">
-        <button type="submit" data-add-card>Add a List</button> 
-        <i class="fa-solid fa-xmark" data-close-add-list></i>
-    </div> 
-  </form>
-</div>
-`;
+    <div class="add-list-box hide" data-show-add-list>
+    <form data-add-list-form>
+        <input type="text" placeholder="Enter list title..." data-list-input>
+        <div class="add-list-btns">
+            <button type="submit" data-add-card>Add a List</button> 
+            <i class="fa-solid fa-xmark" data-close-add-list></i>
+        </div> 
+    </form>
+    </div>
+    `;
 
 
-const showAddListForm = () =>{
-    addNewList.classList.toggle('hide');
-    newListFormContainer.classList.toggle('hide');
+    const showAddListForm = () =>{
+        addNewList.classList.toggle('hide');
+        newListFormContainer.classList.toggle('hide');
+    };
+    const closeAddList = () =>{
+        addNewList.classList.toggle('hide');
+        newListFormContainer.classList.toggle('hide');
+    };
+
+    //whole container
+    const newListFormContainer = addNewListContainer.querySelector('[data-show-add-list]');
+
+    ///top half////this event shows the form/////
+    const addNewList = addNewListContainer.querySelector('.add-new-list');
+    addNewList.addEventListener('click',showAddListForm);
+
+
+    ////this is for the x buttons next to add new list button
+    const closeAddListForm = addNewListContainer.querySelector('[data-close-add-list]');
+
+    closeAddListForm.addEventListener('click',closeAddList);
+
+    ///////form stuff//////
+
+    addListForm = addNewListContainer.querySelector('[data-add-list-form]');
+    listInput = addNewListContainer.querySelector('[data-list-input]');
+
+    addListForm.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') {
+        event.preventDefault();
+        listValidation();
+        }
+    });
+
+    addListForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        listValidation();
+    });
+
+    let listValidation = () => {
+        if (listInput.value === "") {
+        closeAddList(); 
+        } else {
+        acceptList();
+        listInput.value = '';
+        }
+    };
+
+
+
+    let acceptList = () =>{
+    newListValue = { name: listInput.value, data: [] };
+    lists.push(newListValue);
+    localStorage.setItem("lists", JSON.stringify(lists));
+    createLists();
+    makeCreateList();
+    };
+
+    main.appendChild(addNewListContainer);
 };
-const closeAddList = () =>{
-    addNewList.classList.toggle('hide');
-    newListFormContainer.classList.toggle('hide');
-};
 
-//whole container
-const newListFormContainer = addNewListContainer.querySelector('[data-show-add-list]');
-
-///top half////this event shows the form/////
-const addNewList = addNewListContainer.querySelector('.add-new-list');
-addNewList.addEventListener('click',showAddListForm);
-
-
-////this is for the x buttons next to add new list button
-const closeAddListForm = addNewListContainer.querySelector('[data-close-add-list]');
-
-closeAddListForm.addEventListener('click',closeAddList);
-
-///////form stuff//////
-
-addListForm = addNewListContainer.querySelector('[data-add-list-form]');
-listInput = addNewListContainer.querySelector('[data-list-input]');
-
-addListForm.addEventListener('keydown', (event) => {
-    if (event.key === 'Enter') {
-      event.preventDefault();
-      listValidation();
-    }
-  });
-
-addListForm.addEventListener("submit", (e) => {
-    e.preventDefault();
-    listValidation();
-  });
-
-let listValidation = () => {
-    if (listInput.value === "") {
-      closeAddList(); 
-    } else {
-      acceptList();
-      listInput.value = '';
-    }
-  };
-
-
-
-let acceptList = () =>{
-  newListValue = { name: listInput.value, data: [] };
-  lists.push(newListValue);
-  localStorage.setItem("lists", JSON.stringify(lists));
-  createLists();
-};
-
-main.appendChild(addNewListContainer);
+makeCreateList();
