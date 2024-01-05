@@ -1,53 +1,5 @@
 const main = document.querySelector('main');
 
-let currentDeleteListAlert;
-
-
-function deleteList(button){
-    //Close the currently open deleteListAlert if it exists
-   if (currentDeleteListAlert) {
-        currentDeleteListAlert.remove();
-        document.removeEventListener('click', clickOutsideHandler);
-    }
-   const deleteListAlert = document.createElement("div");
-   const deleteListBtn = document.createElement("button");
-   const parentDiv = button.parentElement.parentElement;  //this should be the same as listElement?
-
-   deleteListAlert.classList.add("delete-list-alert");
-   deleteListAlert.textContent = "Are you sure you want to delete this list?";
-   deleteListBtn.classList.add("delete-list-btn");
-   deleteListBtn.textContent = "Delete";
-   deleteListAlert.appendChild(deleteListBtn);
-   parentDiv.appendChild(deleteListAlert);
-
-   function isClickInside(event, element) {
-       return event.target === element || element.contains(event.target);
-   }
-   function clickOutsideHandler(event) {
-       if (!isClickInside(event, deleteListAlert)) {
-           deleteListAlert.remove();
-           document.body.removeEventListener('click', clickOutsideHandler);
-       }
-   }
-
-   document.body.addEventListener('click', clickOutsideHandler);
-   deleteListBtn.addEventListener("click", function(){
-       lists.splice(parentDiv.id, 1);
-
-       parentDiv.remove();
-       deleteListAlert.remove();
-       document.body.removeEventListener('click', clickOutsideHandler);
-       console.log(lists);
-       localStorage.setItem("lists", JSON.stringify(lists));
-
-   });
-   currentDeleteListAlert = deleteListAlert;
-}
-
-
-
-
-
 
 //let lists = ["To Do", "Doing", "In Review", "Done"];
 
@@ -60,7 +12,7 @@ const createLists = () => {
     lists.forEach((element, index) => {
         const listElement = document.createElement('div');
         listElement.classList.add('list');
-        listElement.id = index;
+        //listElement.id = index;
         const newEl = element;
 
         listElement.innerHTML = `
@@ -126,13 +78,70 @@ const createLists = () => {
           
           };
         
-
-        //delete list button function 
+        //////////////////////////////////////////////
+        //delete list button function ///////////////
         const deleteListBtn = listElement.querySelector('.fa-xmark[data-xmark]');
+
+        let deleteList = (e) =>{
+            //const listIndex = index;
+
+            if (currentDeleteListAlert) {
+                currentDeleteListAlert.remove();
+                document.removeEventListener('click', clickOutsideHandler);
+            }
+           const deleteListAlert = document.createElement("div");
+           const deleteListBtn = document.createElement("button");
+           //const parentDiv = button.parentElement.parentElement;  //this should be the same as listElement?
+        
+           deleteListAlert.classList.add("delete-list-alert");
+           deleteListAlert.textContent = "Are you sure you want to delete this list?";
+           deleteListBtn.classList.add("delete-list-btn");
+           deleteListBtn.textContent = "Delete";
+           deleteListAlert.appendChild(deleteListBtn);
+           listElement.appendChild(deleteListAlert);
+        
+           function isClickInside(event, element) {
+               return event.target === element || element.contains(event.target);
+           }
+           function clickOutsideHandler(event) {
+               if (!isClickInside(event, deleteListAlert)) {
+                   deleteListAlert.remove();
+                   document.body.removeEventListener('click', clickOutsideHandler);
+               }
+           }
+        
+           document.body.addEventListener('click', clickOutsideHandler);
+          
+           deleteListBtn.addEventListener("click", function(){
+               
+               const listIndex = lists.indexOf(newEl);
+               
+               lists.splice(listIndex, 1);
+        
+               listElement.remove();
+               deleteListAlert.remove();
+               document.body.removeEventListener('click', clickOutsideHandler);
+               console.log(lists);
+               localStorage.setItem("lists", JSON.stringify(lists));
+        
+           });
+           currentDeleteListAlert = deleteListAlert;
+
+        }
+
+        let currentDeleteListAlert;
+
+
+
+
         deleteListBtn.addEventListener("click", (event) => {
             event.stopPropagation(); // Prevent the click event from propagating to the document
-            deleteList(deleteListBtn);
+            deleteList();
         });
+
+
+
+
 
         //footer and add card close toggle
         const listFooter = listElement.querySelector('.list-footer');
@@ -260,31 +269,39 @@ const createLists = () => {
 
 
 
- //createLists();
-//ths function checks if there is local storage, if there isn't it adds 4 defaults to the lists array
+// Function to initialize local storage and create lists
 function initializeLocalStorage() {
-    if (!localStorage.getItem('lists')) {
-        const defaultLists = [{name: 'To Do', data:[]}, {name: 'Doing', data:[]}, {name: 'In Review', data:[]}, {name: 'Done', data:[]}];
-        localStorage.setItem('lists', JSON.stringify(defaultLists));
-    }else {
-        // If 'lists' key exists but is empty, initialize with default values
-        const existingLists = JSON.parse(localStorage.getItem('lists'));
-        if (!existingLists.length) {
-            const defaultLists = [{name: 'To Do', data:[]}, {name: 'Doing', data:[]}, {name: 'In Review', data:[]}, {name: 'Done', data:[]}];
-            localStorage.setItem('lists', JSON.stringify(defaultLists));
-        }
-    }   
+    const listsKey = 'lists';
+
+    let existingLists = JSON.parse(localStorage.getItem(listsKey));
+
+    if (!existingLists || !existingLists.length) {
+        // If local storage is empty or lists array is empty, load default lists
+        const defaultLists = [
+            { name: 'To Do', data: [] },
+            { name: 'Doing', data: [] },
+            { name: 'In Review', data: [] },
+            { name: 'Done', data: [] }
+        ];
+        localStorage.setItem(listsKey, JSON.stringify(defaultLists));
+        existingLists = defaultLists;
+    }
+
+    lists = existingLists;
+    createLists();
 }
+
+
 
 //Call the function to initialize local storage if needed
  initializeLocalStorage();
 
   
-(() => {
-    lists = JSON.parse(localStorage.getItem("lists")) || []
-    console.log(lists);
-    createLists();
-  })();
+// (() => {
+//     lists = JSON.parse(localStorage.getItem("lists")) || []
+//     console.log(lists);
+//     createLists();
+//   })();
 
 
 
