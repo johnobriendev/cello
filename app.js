@@ -1,8 +1,11 @@
 const main = document.querySelector('main');
 
+//let lists =  JSON.parse(localStorage.getItem("lists")) || [];
+//[{name: 'To Do', data:[]}, {name: 'Doing', data:[]}, {name: 'In Review', data:[]}, {name: 'Done', data:[]}];
+let draggableCard = null;
 
 
-let lists =[{name: 'To Do', data:[]}, {name: 'Doing', data:[]}, {name: 'In Review', data:[]}, {name: 'Done', data:[]}];
+
 
 const createLists = () => {
     //const main = document.querySelector('main');
@@ -11,8 +14,9 @@ const createLists = () => {
     lists.forEach((element, index) => {
         const listElement = document.createElement('div');
         listElement.classList.add('list');
-        //listElement.id = index;
+        listElement.id = index;
         const newEl = element;
+       
 
         listElement.innerHTML = `
             <div class="list-header">
@@ -34,8 +38,9 @@ const createLists = () => {
                 <div class="add-card">Add a Card</div>
             </div>
         `;
-
+        ///////////////////////////////////////
         //make the list name editable on click
+        ///////////////////////////////////////
         let area = null;
         const listName = listElement.querySelector('.list-name');
         
@@ -65,7 +70,7 @@ const createLists = () => {
             area.replaceWith(listName);
 
 
-            // Find the index of the list in the lists array
+            // Find the index of the list/newEl in the lists array
             const listIndex = lists.findIndex(item => item === newEl);
 
             // Update the name property of the corresponding list object
@@ -79,6 +84,7 @@ const createLists = () => {
         
         //////////////////////////////////////////////
         //delete list button function ///////////////
+        /////////////////////////////////////////////
         const deleteListBtn = listElement.querySelector('.fa-xmark[data-xmark]');
 
         let deleteList = (e) =>{
@@ -121,22 +127,19 @@ const createLists = () => {
                document.body.removeEventListener('click', clickOutsideHandler);
                console.log(lists);
                localStorage.setItem("lists", JSON.stringify(lists));
-        
            });
            currentDeleteListAlert = deleteListAlert;
-
         }
-
+       
         let currentDeleteListAlert;
-
-
         deleteListBtn.addEventListener("click", (event) => {
             event.stopPropagation(); // Prevent the click event from propagating to the document
             deleteList();
         });
 
-
+        //////////////////////////////////
         //footer and add card close toggle
+        ///////////////////////////////////
         const listFooter = listElement.querySelector('.list-footer');
         const newCardInput = listElement.querySelector('.new-card-input');
         const closeAddCardBtn = listElement.querySelector('[data-close-add-card]');
@@ -150,8 +153,86 @@ const createLists = () => {
         listFooter.addEventListener("click", toggleVisibility);
         closeAddCardBtn.addEventListener("click", toggleVisibility);
 
-        //form and add card button
+        //////////////////////////////////////
+        //DRAG EVENTS/////////////////////////
+        ///////////////////////////////////////
+       
         const listMain = listElement.querySelector('.list-main');
+       
+        //listMain.setAttribute('data-list-index', index); // Add a data attribute to identify the list
+
+        listMain.addEventListener('dragover', dragOver);
+        listMain.addEventListener('drop', dragDrop);
+
+
+        function dragOver(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = "move";
+            const curTask = document.querySelector(".is-dragging");
+        
+            const bottomTask = insertAboveTask(listMain, e.clientY);
+         
+            //localStorage.setItem("lists", JSON.stringify(lists));
+        
+            if (!bottomTask) {
+                listMain.appendChild(curTask);
+            } else {
+                listMain.insertBefore(curTask, bottomTask);
+            }
+        }
+        
+
+        const insertAboveTask = (listMain, mouseY) => {
+            const els = listMain.querySelectorAll(".card:not(.is-dragging)");
+          
+            let closestTask = null;
+            let closestOffset = Number.NEGATIVE_INFINITY;
+          
+            els.forEach((task) => {
+              const { top } = task.getBoundingClientRect();
+          
+              const offset = mouseY - top;
+          
+              if (offset < 0 && offset > closestOffset) {
+                closestOffset = offset;
+                closestTask = task;
+              }
+            });
+          
+            return closestTask;
+        };
+
+       
+        //the event taken in should be the list main the card was just dropped
+        function dragDrop(e) {
+            e.preventDefault();
+            e.dataTransfer.getData('text/plain', e.target.textContent);
+             // Save the updated board state to local storage
+            localStorage.setItem("lists", JSON.stringify(lists));    
+        }
+        /////these functions are applied to the cards themselves////////////
+        // Function to handle the drag start event for cards
+        function dragStart(e) {
+            draggableCard = this;
+            
+            draggableCard.classList.add("is-dragging");
+            e.dataTransfer.setData('text/plain', e.target.textContent);
+            e.dataTransfer.effectAllowed = "move";
+            cardIndexInData = element.data.indexOf(this);
+            console.log("3"+ cardIndexInData);
+            console.log("dragStart");
+        }
+
+        // Function to handle the drag end event for cards
+        function dragEnd() {
+            draggableCard.classList.remove("is-dragging");
+            draggableCard = null;
+            console.log("dragEnd");
+        }
+
+       
+        //form and add card button
+        
         const form = listElement.querySelector('form');
         const textArea = listElement.querySelector('textarea');
 
@@ -192,12 +273,18 @@ const createLists = () => {
             newEl.data.forEach((element, index)=>{
                 const cardElement = document.createElement('div');
                 cardElement.classList.add('card');
-                cardElement.id = index + "C";
+                const cardId = `card-${index}`;
+                cardElement.id = element;
+                cardElement.draggable = true;
+                cardElement.setAttribute('data-card-id', cardId);
+                cardElement.addEventListener('dragstart', dragStart);
+                cardElement.addEventListener('dragend', dragEnd);
+
 
                 cardElement.innerHTML =`
                 <div class="card-name">${element}</div>
                 <div class="card-btns">
-                <i class="fa-solid fa-trash" data-delete-card-btn></i>
+                    <i class="fa-solid fa-trash" data-delete-card-btn></i>
                 </div>
                 `;
 
@@ -233,7 +320,6 @@ const createLists = () => {
 
                 cardName.addEventListener('click', editCard);
 
-
                 const deleteCardBtn = cardElement.querySelector('[data-delete-card-btn]');
 
                 let deleteCard = (e) =>{
@@ -244,13 +330,15 @@ const createLists = () => {
                     console.log(newEl.data);
                   };
 
-                 deleteCardBtn.addEventListener('click', deleteCard); 
+                deleteCardBtn.addEventListener('click', deleteCard); 
 
                 
                 listMain.appendChild(cardElement);
                 
             });///end for each card/data
 
+            // Add the draggable event listeners for cards
+            
         };///end create card
 
         createCard();
@@ -296,9 +384,9 @@ function initializeLocalStorage() {
     createLists();
   })();
 
-
+//////////////////////////////////////////////////
 //////////CREATE A NEW LIST FORM/////////////////
-
+/////////////////////////////////////////////////
 const makeCreateList = () =>{
     const addNewListContainer = document.createElement('div');
     addNewListContainer.classList.add('add-new-list-container');
